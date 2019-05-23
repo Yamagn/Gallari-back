@@ -1,55 +1,20 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/yamagn/gallari-back/Conf"
 	"github.com/yamagn/gallari-back/Model"
-	"github.com/yamagn/gallari-back/Controller"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/yamagn/gallari-back/Router"
 )
 
 func main() {
 	db := Conf.GormConnect()
-	db.Set("gorm:table_options", "ENGINE=mysql")
+	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.AutoMigrate(&Model.User{})
 	db.AutoMigrate(&Model.Product{})
+	db.LogMode(true)
 	defer db.Close()
 
-	r := gin.Default()
-
-	// product
-	r.POST("/product/create", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.GET("/product/:Id", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.GET("/product/all", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.DELETE("/product/:Id", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.PUT("/product/update", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-
-	// user
-	r.POST("/user/create", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.GET("/user/:Id", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.GET("/user/all", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.DELETE("/user/:Id", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-	r.PUT("/user/update", func(c *gin.Context) {
-		c.String(200, "Hello World!")
-	})
-
+	r := Router.Router(db)
 	r.Run()
 }
