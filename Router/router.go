@@ -86,11 +86,6 @@ func Router(db *gorm.DB) *gin.Engine {
 			c.String(http.StatusBadRequest, "Request is failed: " + e.Error())
 		}
 		user := UserController.GetOne(db, id)
-		//jsonBytes, err := json.Marshal(user)
-		//if err != nil {
-		//	c.String(http.StatusBadRequest, "Request is failed: "+ err.Error())
-		//	return
-		//}
 		c.JSON(http.StatusOK, user)
 	})
 	r.GET("/user/all", func(c *gin.Context) {

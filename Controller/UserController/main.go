@@ -24,16 +24,33 @@ func Create(db *gorm.DB, user Model.User) {
 	db.Create(&user)
 }
 
-func GetOne(db *gorm.DB, id int) Model.User{
+func GetOne(db *gorm.DB, id int) Model.ReturnUser{
 	user := Model.User{}
 	db.Where("ID = ?", id).First(&user)
-	return user
+	returnUser := Model.ReturnUser{}
+	returnUser.Id = user.Id
+	returnUser.DisplayName = user.DisplayName
+	returnUser.Email = user.Email
+	returnUser.CreatedAt = user.CreatedAt
+	returnUser.UpdatedAt = user.UpdatedAt
+	return returnUser
 }
 
-func GetAll(db *gorm.DB) []Model.User {
+func GetAll(db *gorm.DB) []Model.ReturnUser {
 	var users []Model.User
 	db.Find(&users)
-	return users
+	var returnUsers []Model.ReturnUser
+	for _, user := range users{
+		returnUser := Model.ReturnUser{}
+		returnUser.Id = user.Id
+		returnUser.DisplayName = user.DisplayName
+		returnUser.Email = user.Email
+		returnUser.CreatedAt = user.CreatedAt
+		returnUser.UpdatedAt = user.UpdatedAt
+		returnUsers = append(returnUsers, returnUser)
+	}
+
+	return returnUsers
 }
 
 func Delete(db *gorm.DB, id int) {
